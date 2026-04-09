@@ -1,34 +1,22 @@
-// client/src/App.js
-
 import React from 'react';
-// Importamos las herramientas necesarias para definir las rutas (páginas)
-import { Routes, Route } from 'react-router-dom';
-import './App.css'; 
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Dashboard from './pages/Dashboard';
+import Registro from './pages/Registro';
 
-// Importamos los componentes que creamos en la carpeta 'components'
-import Login from './components/Login';
-import Formulario from './components/Formulario';
-import Reportes from './components/Reportes';
+// ¡ESTA LÍNEA ES LA QUE FALTA! 
+// Asegúrate de que la ruta sea correcta (si App.css está en la misma carpeta)
+import './App.css'; 
 
 function App() {
   return (
-    <div className="App">
-      {/* 
-        El componente <Routes> envuelve todas las rutas de nuestra aplicación.
-        Cuando la URL en el navegador coincide con el 'path', se muestra el 
-        componente asociado en el atributo 'element'.
-      */}
+    <Router>
       <Routes>
-        {/* Ruta raíz (URL: /): Muestra el componente Login */}
-        <Route path="/" element={<Login />} />
-        
-        {/* Ruta para el Formulario (URL: /formulario): Muestra el componente Formulario */}
-        <Route path="/formulario" element={<Formulario />} />
-        
-        {/* Ruta para los Reportes (URL: /reportes): Muestra el componente Reportes */}
-        <Route path="/reportes" element={<Reportes />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/registro" element={<Registro />} />
+        {/* Si entras a la raíz, te redirige al dashboard */}
+        <Route path="/" element={<Navigate to="/dashboard" />} />
       </Routes>
-    </div>
+    </Router>
   );
 }
 

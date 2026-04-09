@@ -1,0 +1,82 @@
+/* Contenedor principal de la ficha - Estilo Foto 3 */
+.form-card-white {
+  background: white;
+  padding: 40px;
+  border-radius: 20px; /* Bordes más redondeados */
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05); /* Sombra suave y profunda */
+  border-top: 6px solid #3182ce;
+  margin-top: 25px;
+}
+
+/* Títulos de sección dentro de la ficha */
+.form-section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 25px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #edf2f7;
+}
+
+/* Grilla de dos columnas para los datos de las fotos 1 y 2 */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input-group label {
+  font-weight: 600;
+  color: #4a5568;
+  font-size: 0.9rem;
+}
+
+/* Estilo de los inputs - Más limpios */
+input, select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background-color: #fdfdfd;
+  font-size: 0.95rem;
+}
+
+/* Botones con efectos de hover */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 40px;
+  padding-top: 25px;
+  border-top: 1px solid #edf2f7;
+}
+
+.btn-save { 
+  background: #1a365d; 
+  color: white; 
+  padding: 12px 24px; 
+  border-radius: 10px; 
+  border: none; 
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-next { 
+  background: #2f855a; 
+  color: white; 
+  padding: 12px 24px; 
+  border-radius: 10px; 
+  border: none; 
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.btn-next:hover { transform: scale(1.05); }

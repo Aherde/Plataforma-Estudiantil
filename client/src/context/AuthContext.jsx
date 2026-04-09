@@ -1,59 +1,26 @@
-// client/src/context/AuthContext.jsx
-
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { 
-    signInWithEmailAndPassword, 
-    onAuthStateChanged, 
-    signOut 
-} from 'firebase/auth';
-import { auth } from '../firebase-config'; // Asegúrate de que la ruta sea correcta
+import React, { createContext, useContext, useEffect, useState } from 'react';
+// Esta es la ruta corregida que apunta a tu nueva estructura
+import { db } from '../firebase/config'; 
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 const AuthContext = createContext();
 
-// Hook personalizado (se mantiene como exportación nombrada)
-export const useAuth = () => {
-    return useContext(AuthContext);
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const auth = getAuth();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, [auth]);
+
+  return (
+    <AuthContext.Provider value={{ user, db }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
-// Componente AuthProvider
-const AuthProvider = ({ children }) => {
-    const [currentUser, setCurrentUser] = useState(null);
-    const [loading, setLoading] = useState(true);
-
-    // Función para iniciar sesión
-    const login = (email, password) => {
-        return signInWithEmailAndPassword(auth, email, password);
-    };
-
-    // Función para cerrar sesión
-    const logout = () => {
-        return signOut(auth);
-    };
-
-    useEffect(() => {
-        // Suscribirse a los cambios de estado de autenticación de Firebase
-        const unsubscribe = onAuthStateChanged(auth, user => {
-            setCurrentUser(user);
-            setLoading(false);
-        });
-
-        // Limpiar la suscripción al desmontar el componente
-        return unsubscribe;
-    }, []);
-
-    const value = {
-        currentUser,
-        login,
-        logout
-    };
-
-    // Solo renderiza la aplicación si no está cargando (ya verificó el estado de Firebase)
-    return (
-        <AuthContext.Provider value={value}>
-            {!loading && children}
-        </AuthContext.Provider>
-    );
-};
-
-// ¡EXPORTACIÓN POR DEFECTO!
-export default AuthProvider;
+export const useAuth = () => useContext(AuthContext);
