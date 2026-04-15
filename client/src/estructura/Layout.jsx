@@ -1,82 +1,104 @@
-import React from "react";
-import { Link, useLocation } from "react-router-dom";
-// Importamos el icono de la librería que instalamos
-import { FaUserGraduate } from 'react-icons/fa'; 
+import React, { useState } from 'react';
+import Reportes from '../components/Reportes';
+import AlumnoForm from '../components/AlumnoForm';
+import DashboardCards from '../components/DashboardCards';
+import ListaEstudiantes from '../components/ListaEstudiantes';
 
-const Layout = ({ children }) => {
-  const location = useLocation();
-  const isActive = (path) => location.pathname === path;
+const Layout = () => {
+  const [activeTab, setActiveTab] = useState('inicio');
+  const [estudianteAEditar, setEstudianteAEditar] = useState(null);
+
+  // Función para manejar la edición desde la lista
+  const handleEditar = (estudiante) => {
+    setEstudianteAEditar(estudiante);
+    setActiveTab('estudiantes');
+  };
+
+  // Función para resetear el modo edición después de guardar
+  const handleFormReset = () => {
+    setEstudianteAEditar(null);
+  };
+
+  // Función que renderiza el componente según la pestaña activa
+  const renderContent = () => {
+    switch(activeTab) {
+      case 'reportes':
+        return <Reportes />;
+      case 'estudiantes':
+        return <AlumnoForm estudianteAEditar={estudianteAEditar} onFormReset={handleFormReset} />;
+      case 'lista':
+        return <ListaEstudiantes onEditar={handleEditar} />;
+      case 'configuracion':
+        return (
+          <div style={{ padding: '20px' }}>
+            <h2>⚙️ Configuración del Sistema</h2>
+            <p>Panel de configuración del sistema</p>
+            <hr />
+            <h3>Información</h3>
+            <p>Versión: 1.0.0</p>
+            <p>Desarrollado para U.E.N.B DR. LUIS PADRINO</p>
+          </div>
+        );
+      default:
+        return <DashboardCards />;
+    }
+  };
+
+  const navStyle = (active) => ({
+    alignItems: 'center',
+    fontWeight: active ? "600" : "400",
+    transition: "all 0.3s ease",
+    border: active ? "none" : "1px solid rgba(255,255,255,0.1)",
+    cursor: 'pointer',
+    padding: '10px 20px',
+    borderRadius: '8px',
+    backgroundColor: active ? '#007bff' : 'transparent',
+    color: active ? '#fff' : '#333'
+  });
+
+  const menuItems = [
+    { id: 'inicio', label: '🏠 Inicio' },
+    { id: 'reportes', label: '📊 Reportes' },
+    { id: 'estudiantes', label: '✏️ Registrar Estudiante' },
+    { id: 'lista', label: '📋 Lista de Estudiantes' },
+    { id: 'configuracion', label: '⚙️ Configuración' }
+  ];
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", fontFamily: "sans-serif" }}>
-      {/* Sidebar Azul Oscuro */}
-      <aside style={{ 
-        width: "260px", 
-        backgroundColor: "#0d1b2a", 
-        color: "white", 
-        position: "fixed", 
-        height: "100vh", 
-        padding: "20px",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        boxShadow: "4px 0px 10px rgba(0,0,0,0.3)",
-        zIndex: 100
+    <div style={{ display: 'flex', height: '100vh' }}>
+      {/* Sidebar o menú de navegación */}
+      <nav style={{ 
+        width: '250px', 
+        backgroundColor: '#f8f9fa',
+        padding: '20px',
+        borderRight: '1px solid #dee2e6'
       }}>
-        
-        {/* --- SECCIÓN DEL ICONO (NUEVA) --- */}
-        <div style={{ textAlign: "center", marginBottom: "35px", width: "100%" }}>
-          <div style={{
-            width: "80px",
-            height: "80px",
-            backgroundColor: "#3182ce", // Azul brillante para resaltar
-            borderRadius: "50%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            margin: "0 auto 15px",
-            boxShadow: "0px 4px 12px rgba(49, 130, 206, 0.4)"
-          }}>
-            {/* El Icono sustituye a la imagen Base64 */}
-            <FaUserGraduate size={40} color="white" />
-          </div>
-          
-          <h2 style={{ fontSize: "0.9rem", margin: 0, fontWeight: "bold", color: "#E2E8F0", letterSpacing: "1px" }}>
-            UENB LUIS PADRINO
-          </h2>
-          <div style={{ width: "40px", height: "2px", backgroundColor: "#3182ce", margin: "10px auto" }}></div>
-        </div>
+        <h2 style={{ marginBottom: '20px', fontSize: '18px' }}>Plataforma Estudiantil</h2>
+        <ul style={{ listStyle: 'none', padding: 0 }}>
+          {menuItems.map(item => (
+            <li key={item.id} style={{ marginBottom: '10px' }}>
+              <div
+                onClick={() => setActiveTab(item.id)}
+                style={navStyle(activeTab === item.id)}
+              >
+                {item.label}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </nav>
 
-        {/* Navegación */}
-        <nav style={{ display: "flex", flexDirection: "column", gap: "12px", width: "100%" }}>
-          <Link to="/dashboard" style={navStyle(isActive("/dashboard"))}>
-            <span style={{ marginRight: "12px" }}>📊</span> Dashboard
-          </Link>
-          <Link to="/registro" style={navStyle(isActive("/registro"))}>
-            <span style={{ marginRight: "12px" }}>👤</span> Registro
-          </Link>
-        </nav>
-      </aside>
-
-      {/* Contenido Principal */}
-      <main style={{ flex: 1, marginLeft: "260px", padding: "40px", backgroundColor: "#f1f5f9", minHeight: "100vh" }}>
-        {children}
+      {/* Contenido principal - Aquí se renderiza la pestaña activa */}
+      <main style={{ 
+        flex: 1, 
+        padding: '20px',
+        overflowY: 'auto',
+        backgroundColor: '#f4f6f9'
+      }}>
+        {renderContent()}
       </main>
     </div>
   );
 };
-
-const navStyle = (active) => ({
-  padding: "14px 20px",
-  color: "white",
-  textDecoration: "none",
-  borderRadius: "10px",
-  backgroundColor: active ? "#3182ce" : "transparent",
-  display: "flex",
-  alignItems: "center",
-  fontWeight: active ? "600" : "400",
-  transition: "all 0.3s ease",
-  border: active ? "none" : "1px solid rgba(255,255,255,0.1)"
-});
 
 export default Layout;
