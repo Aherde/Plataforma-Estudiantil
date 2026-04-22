@@ -1,23 +1,29 @@
+// src/context/AuthContext.jsx
 import React, { createContext, useContext, useEffect, useState } from 'react';
-// Esta es la ruta corregida que apunta a tu nueva estructura
-import { db } from '../firebase/config'; 
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../firebase/config';
+import { onAuthStateChanged, signOut as firebaseSignOut } from 'firebase/auth';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const auth = getAuth();
+  const [cargandoAuth, setCargandoAuth] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
+      setCargandoAuth(false);
     });
     return () => unsubscribe();
-  }, [auth]);
+  }, []);
+
+  // Función para cerrar sesión
+  const signOut = async () => {
+    await firebaseSignOut(auth);
+  };
 
   return (
-    <AuthContext.Provider value={{ user, db }}>
+    <AuthContext.Provider value={{ user, cargandoAuth, signOut }}>
       {children}
     </AuthContext.Provider>
   );

@@ -3,10 +3,16 @@ import Reportes from '../components/Reportes';
 import AlumnoForm from '../components/AlumnoForm';
 import DashboardCards from '../components/DashboardCards';
 import ListaEstudiantes from '../components/ListaEstudiantes';
+import { useAuth } from '../context/AuthContext'; // ← NUEVO
 
 const Layout = () => {
   const [activeTab, setActiveTab] = useState('inicio');
   const [estudianteAEditar, setEstudianteAEditar] = useState(null);
+  const { signOut, user } = useAuth(); // ← NUEVO
+
+  const handleLogout = async () => { // ← NUEVO
+    await signOut();
+  };
 
   // Función para manejar la edición desde la lista
   const handleEditar = (estudiante) => {
@@ -28,17 +34,61 @@ const Layout = () => {
         return <AlumnoForm estudianteAEditar={estudianteAEditar} onFormReset={handleFormReset} />;
       case 'lista':
         return <ListaEstudiantes onEditar={handleEditar} />;
-      case 'configuracion':
+            case 'configuracion':
         return (
           <div style={{ padding: '20px' }}>
             <h2>⚙️ Configuración del Sistema</h2>
-            <p>Panel de configuración del sistema</p>
             <hr />
-            <h3>Información</h3>
-            <p>Versión: 1.0.0</p>
-            <p>Desarrollado para U.E.N.B DR. LUIS PADRINO</p>
+            
+            <div style={{ 
+              background: 'white', 
+              borderRadius: '12px', 
+              padding: '20px', 
+              marginBottom: '20px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+            }}>
+              <h3 style={{ color: '#2c3e50', marginTop: 0 }}>📋 Información de la Plataforma</h3>
+              <p><strong>Versión:</strong> 1.0.0</p>
+              <p><strong>Institución:</strong> U.E.N.B DR. LUIS PADRINO</p>
+              <p><strong>Desarrollado por:</strong> Estudiantes de la UNETI - PNF de Informática</p>
+            </div>
+
+            <div style={{ 
+              background: 'white', 
+              borderRadius: '12px', 
+              padding: '20px', 
+              marginBottom: '20px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+            }}>
+              <h3 style={{ color: '#2c3e50', marginTop: 0 }}>👥 Equipo de Desarrollo</h3>
+              <ul style={{ margin: 0, paddingLeft: '20px' }}>
+                <li>Estudiantes del PNF de Informática - UNETI</li>
+                <li>Proyecto de Aplicación Web</li>
+              </ul>
+            </div>
+
+            <div style={{ 
+              background: 'white', 
+              borderRadius: '12px', 
+              padding: '20px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+            }}>
+              <h3 style={{ color: '#2c3e50', marginTop: 0 }}>🛠️ Tecnologías Utilizadas</h3>
+              <ul style={{ margin: 0, paddingLeft: '20px' }}>
+                <li>React.js - Frontend</li>
+                <li>Firebase - Base de datos y Autenticación</li>
+                <li>HTML2Canvas + jsPDF - Generación de PDF</li>
+                <li>XLSX - Exportación a Excel</li>
+              </ul>
+              <p style={{ marginTop: '15px', fontSize: '12px', color: '#666', textAlign: 'center' }}>
+                © 2026 - Todos los derechos reservados<br />
+                Universidad Nacional Experimental de las Telecomunicaciones e Informatica (UNETI)<br />
+                PNF de Informática
+              </p>
+            </div>
           </div>
         );
+      
       default:
         return <DashboardCards />;
     }
@@ -86,9 +136,34 @@ const Layout = () => {
             </li>
           ))}
         </ul>
+        
+        {/* Botón de Cerrar Sesión */}  {/* ← NUEVO */}
+        <div style={{ marginTop: '30px', borderTop: '1px solid #dee2e6', paddingTop: '15px' }}>
+          <div
+            onClick={handleLogout}
+            style={{
+              alignItems: 'center',
+              fontWeight: '400',
+              transition: 'all 0.3s ease',
+              cursor: 'pointer',
+              padding: '10px 20px',
+              borderRadius: '8px',
+              backgroundColor: '#e74c3c',
+              color: '#fff',
+              textAlign: 'center'
+            }}
+          >
+            🚪 Cerrar Sesión
+          </div>
+          {user && (
+            <small style={{ display: 'block', textAlign: 'center', marginTop: '8px', fontSize: '11px', color: '#666' }}>
+              {user.email}
+            </small>
+          )}
+        </div>
       </nav>
 
-      {/* Contenido principal - Aquí se renderiza la pestaña activa */}
+      {/* Contenido principal */}
       <main style={{ 
         flex: 1, 
         padding: '20px',

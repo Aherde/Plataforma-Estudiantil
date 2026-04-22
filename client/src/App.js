@@ -1,22 +1,58 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Dashboard from './pages/Dashboard';
+// import Dashboard from './pages/Dashboard';
 import Registro from './pages/Registro';
+import Layout from './estructura/Layout';
+import './App.css';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import LoginScreen from './components/LoginScreen';
 
-// ¡ESTA LÍNEA ES LA QUE FALTA! 
-// Asegúrate de que la ruta sea correcta (si App.css está en la misma carpeta)
-import './App.css'; 
+function RutaProtegida({ children }) {
+  const { user, cargandoAuth } = useAuth();
+  
+  if (cargandoAuth) {
+    return <div>Cargando...</div>;
+  }
+  
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
+  
+  return children;
+}
+
+function AppRoutes() {
+  const { cargandoAuth } = useAuth();
+  
+  if (cargandoAuth) {
+    return <div>Cargando...</div>;
+  }
+  
+  return (
+    <Routes>
+      <Route path="/login" element={<LoginScreen />} />
+      <Route path="/dashboard" element={
+        <RutaProtegida>
+          <Layout />
+        </RutaProtegida>
+      } />
+      <Route path="/registro" element={
+        <RutaProtegida>
+          <Registro />
+        </RutaProtegida>
+      } />
+      <Route path="/" element={<Navigate to="/login" />} />  {/* ← SOLO ESTO CAMBIA */}
+    </Routes>
+  );
+}
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/registro" element={<Registro />} />
-        {/* Si entras a la raíz, te redirige al dashboard */}
-        <Route path="/" element={<Navigate to="/dashboard" />} />
-      </Routes>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <AppRoutes />
+      </Router>
+    </AuthProvider>
   );
 }
 

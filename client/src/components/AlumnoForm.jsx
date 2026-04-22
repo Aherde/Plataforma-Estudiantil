@@ -11,6 +11,22 @@ const AlumnoForm = ({ estudianteAEditar, onFormReset }) => {
   const [errores, setErrores] = useState({});
   const formRef = useRef(null);
 
+  // Navegación entre pestañas
+  const tabs = ['alumno', 'madre', 'padre', 'representante', 'record'];
+  const currentIndex = tabs.indexOf(activeTab);
+
+  const irSiguiente = () => {
+    if (currentIndex < tabs.length - 1) {
+      setActiveTab(tabs[currentIndex + 1]);
+    }
+  };
+
+  const irAnterior = () => {
+    if (currentIndex > 0) {
+      setActiveTab(tabs[currentIndex - 1]);
+    }
+  };
+
   // DATOS DEL ALUMNO
   const [alumno, setAlumno] = useState({
     apellidosNombres: '',
@@ -534,7 +550,7 @@ const AlumnoForm = ({ estudianteAEditar, onFormReset }) => {
         </div>
       )}
 
-      {/* Botones de navegación - SIN el botón PDF aquí */}
+      {/* Botones de navegación superiores */}
       <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap' }}>
         <button onClick={() => setActiveTab('alumno')} style={tabStyle('alumno')}>📚 Datos del Alumno</button>
         <button onClick={() => setActiveTab('madre')} style={tabStyle('madre')}>👩 Datos de la Madre</button>
@@ -593,6 +609,25 @@ const AlumnoForm = ({ estudianteAEditar, onFormReset }) => {
                 <div><label style={labelStyle}>Talla Zapatos</label><input type="text" name="tallaZapatos" value={alumno.tallaZapatos} onChange={(e) => handleChange(e, alumno, setAlumno)} placeholder="Ej: 30" style={inputStyle} /></div>
                 <div><label style={labelStyle}>¿Come en el comedor escolar?</label><select name="comeComedor" value={alumno.comeComedor} onChange={(e) => handleChange(e, alumno, setAlumno)} style={inputStyle}><option value="">Seleccione</option><option value="Si">Si</option><option value="No">No</option></select></div>
               </div>
+              
+              {/* Botón Siguiente */}
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px' }}>
+                <button
+                  type="button"
+                  onClick={irSiguiente}
+                  style={{
+                    padding: '10px 20px',
+                    backgroundColor: '#3498db',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '5px',
+                    cursor: 'pointer',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  Siguiente → 📚
+                </button>
+              </div>
             </div>
           )}
 
@@ -629,6 +664,40 @@ const AlumnoForm = ({ estudianteAEditar, onFormReset }) => {
                 <div><label style={labelStyle}>Teléfono</label><input type="text" name="telefonoEmergencia" value={madre.telefonoEmergencia} onChange={(e) => handleChange(e, madre, setMadre)} placeholder="Ej: 0414-9324379" style={inputStyle} /></div>
                 <div><label style={labelStyle}>Ocupación</label><input type="text" name="ocupacionEmergencia" value={madre.ocupacionEmergencia} onChange={(e) => handleChange(e, madre, setMadre)} placeholder="Ej: Del hogar" style={inputStyle} /></div>
               </div>
+              
+              {/* Botones Anterior y Siguiente */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
+                <button
+                  type="button"
+                  onClick={irAnterior}
+                  style={{
+                    padding: '10px 20px',
+                    backgroundColor: '#6c757d',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '5px',
+                    cursor: 'pointer',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  ← Anterior 👩
+                </button>
+                <button
+                  type="button"
+                  onClick={irSiguiente}
+                  style={{
+                    padding: '10px 20px',
+                    backgroundColor: '#3498db',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '5px',
+                    cursor: 'pointer',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  Siguiente → 👨
+                </button>
+              </div>
             </div>
           )}
 
@@ -664,6 +733,40 @@ const AlumnoForm = ({ estudianteAEditar, onFormReset }) => {
                 <div><label style={labelStyle}>Parentesco</label><input type="text" name="parentescoEmergencia" value={padre.parentescoEmergencia} onChange={(e) => handleChange(e, padre, setPadre)} placeholder="Parentesco" style={inputStyle} /></div>
                 <div><label style={labelStyle}>Teléfono</label><input type="text" name="telefonoEmergencia" value={padre.telefonoEmergencia} onChange={(e) => handleChange(e, padre, setPadre)} placeholder="Teléfono" style={inputStyle} /></div>
                 <div><label style={labelStyle}>Ocupación</label><input type="text" name="ocupacionEmergencia" value={padre.ocupacionEmergencia} onChange={(e) => handleChange(e, padre, setPadre)} placeholder="Ocupación" style={inputStyle} /></div>
+              </div>
+              
+              {/* Botones Anterior y Siguiente */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
+                <button
+                  type="button"
+                  onClick={irAnterior}
+                  style={{
+                    padding: '10px 20px',
+                    backgroundColor: '#6c757d',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '5px',
+                    cursor: 'pointer',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  ← Anterior 👨
+                </button>
+                <button
+                  type="button"
+                  onClick={irSiguiente}
+                  style={{
+                    padding: '10px 20px',
+                    backgroundColor: '#3498db',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '5px',
+                    cursor: 'pointer',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  Siguiente → 📋
+                </button>
               </div>
             </div>
           )}
@@ -720,16 +823,65 @@ const AlumnoForm = ({ estudianteAEditar, onFormReset }) => {
                   </div>
                 </div>
               )}
+              
+              {/* Botones Anterior y Siguiente */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
+                <button
+                  type="button"
+                  onClick={irAnterior}
+                  style={{
+                    padding: '10px 20px',
+                    backgroundColor: '#6c757d',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '5px',
+                    cursor: 'pointer',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  ← Anterior 📋
+                </button>
+                <button
+                  type="button"
+                  onClick={irSiguiente}
+                  style={{
+                    padding: '10px 20px',
+                    backgroundColor: '#3498db',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '5px',
+                    cursor: 'pointer',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  Siguiente → 📖
+                </button>
+              </div>
             </div>
           )}
 
-          {/* TAB 5: RECORD DE PROSECUCIÓN - CON BOTÓN PDF */}
+          {/* TAB 5: RECORD DE PROSECUCIÓN - CON BOTÓN PDF Y ANTERIOR */}
           {activeTab === 'record' && (
             <div style={sectionStyle}>
               <div style={headerStyle}><h3 style={{ margin: 0 }}>RECORD DE PROSECUCIÓN</h3></div>
               
-              {/* Botón PDF dentro de esta pestaña */}
-              <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '20px' }}>
+              {/* Botones: Anterior y PDF */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', alignItems: 'center' }}>
+                <button
+                  type="button"
+                  onClick={irAnterior}
+                  style={{
+                    padding: '10px 20px',
+                    backgroundColor: '#6c757d',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '5px',
+                    cursor: 'pointer',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  ← Anterior
+                </button>
                 <button 
                   type="button"
                   onClick={descargarPDF} 
